@@ -31,15 +31,42 @@ class Variable
     private $nullable;
 
     /**
+     * @var string the use
+     */
+    private $use;
+
+    /**
      * @param string $type
      * @param string $name
      * @param bool   $nullable
      */
-    public function __construct($type, $name, $nullable)
+    public function __construct($type, $name, $nullable, $use = 'required')
     {
         $this->type     = $type;
         $this->name     = $name;
         $this->nullable = $nullable;
+        $this->use = $use;
+        if ($use == 'optional') {
+            $this->nullable = true;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getUse()
+    {
+        return $this->use;
+    }
+
+    /**
+     * @param string $use
+     * @return Variable
+     */
+    public function setUse($use)
+    {
+        $this->use = $use;
+        return $this;
     }
 
     /**

@@ -81,14 +81,32 @@ class TypeNode extends XmlNode
     {
         foreach ($this->element->getElementsByTagName('element') as $element) {
             if ($element->getAttribute('name') == $name &&
-                  ($element->getAttribute('maxOccurs') == 'unbounded'
+                ($element->getAttribute('maxOccurs') == 'unbounded'
                     || $element->getAttribute('maxOccurs') >= 2)
-              ) {
+            ) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Returns the minOccurs value of the element.
+     *
+     * @param $name string The name of the sub element
+     *
+     * @return int the minOccurs value of the element
+     */
+    public function getAttributeUse($name)
+    {
+        foreach ($this->element->getElementsByTagName('attribute') as $element) {
+            if ($element->getAttribute('name') == $name) {
+                return $element->getAttribute('use');
+            }
+        }
+
+        return 'notfound';
     }
 
     /**
@@ -153,6 +171,7 @@ class TypeNode extends XmlNode
             $typeName .= '[]';
 
             $parts[$name] = $typeName;
+
         }
 
         for ($i = 1; $i < sizeof($wsdlLines) - 1; ++$i) {
@@ -231,8 +250,8 @@ class TypeNode extends XmlNode
     {
         // If array is defied as inherited from array type it has restricton to array elements type, but still is complexType
         return
-          $this->restriction == 'struct' ||
-          $this->element->localName == 'complexType';
+            $this->restriction == 'struct' ||
+            $this->element->localName == 'complexType';
     }
 
     /**

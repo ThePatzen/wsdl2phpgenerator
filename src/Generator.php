@@ -75,8 +75,8 @@ class Generator implements GeneratorInterface
         if (empty($options['features']) ||
             (($options['features'] & SOAP_SINGLE_ELEMENT_ARRAYS) != SOAP_SINGLE_ELEMENT_ARRAYS)) {
             $message = ['SoapClient option feature SOAP_SINGLE_ELEMENT_ARRAYS is not set.',
-                             'This is not recommended as data types in DocBlocks for array properties will not be ',
-                             'valid if the array only contains a single value.', ];
+                'This is not recommended as data types in DocBlocks for array properties will not be ',
+                'valid if the array only contains a single value.', ];
             $this->log(implode(PHP_EOL, $message), 'warning');
         }
 
@@ -151,13 +151,15 @@ class Generator implements GeneratorInterface
 
                 $type->setAbstract($typeNode->isAbstract());
 
+
                 foreach ($typeNode->getParts() as $name => $typeName) {
                     // There are 2 ways a wsdl can indicate that a field accepts the null value -
                     // by setting the "nillable" attribute to "true" or by setting the "minOccurs" attribute to "0".
                     // See http://www.ibm.com/developerworks/webservices/library/ws-tip-null/index.html
                     $nullable = $typeNode->isElementNillable($name) || $typeNode->getElementMinOccurs($name) === 0;
-                    $type->addMember($typeName, $name, $nullable);
+                    $type->addMember($typeName, $name, $nullable, $typeNode->getAttributeUse($name));
                 }
+
             } elseif ($enumValues = $typeNode->getEnumerations()) {
                 $type = new Enum($this->config, $typeNode->getName(), $typeNode->getRestriction());
                 array_walk($enumValues, function ($value) use ($type) {

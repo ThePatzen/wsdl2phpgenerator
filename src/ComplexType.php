@@ -68,6 +68,7 @@ class ComplexType extends Type
 
         $classBaseType = $this->getBaseTypeClass();
 
+
         $this->class = new PhpClass(
             $this->phpIdentifier,
             false,
@@ -254,9 +255,9 @@ class ComplexType extends Type
      * @param string $name
      * @param bool   $nullable
      */
-    public function addMember($type, $name, $nullable)
+    public function addMember($type, $name, $nullable, $use)
     {
-        $this->members[$name] = new Variable($type, $name, $nullable);
+        $this->members[$name] = new Variable($type, $name, $nullable, $use);
     }
 
     /**
